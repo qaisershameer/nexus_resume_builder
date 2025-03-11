@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:nexus_resumate/screens/signin_screen.dart';
-import 'package:nexus_resumate/screens/signup_screen.dart';
-
+import '../screens/signin_screen.dart';
+import '../screens/signup_screen.dart';
 import '../styles/app_constants.dart';
 import '../styles/text_style.dart';
 
@@ -32,7 +31,7 @@ class _HomeScreenState extends State<HomeScreen> {
         // margin:  const EdgeInsets.all(8),
         child: Center(
           child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.center,
             children: [
               const CircleAvatar(
                 radius: 95,
@@ -44,9 +43,9 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
               ),
 
-              Padding(
-                padding: EdgeInsets.symmetric(horizontal: 32, vertical: 24),
-                child: Divider(color: Colors.green.shade200, thickness: 1.0,),
+              const Padding(
+                padding: EdgeInsets.symmetric(horizontal: 72, vertical: 32),
+                child: Divider(color: Colors.white, thickness: 1.0,),
               ),
 
 
@@ -69,8 +68,8 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
 
               Padding(
-                padding: EdgeInsets.symmetric(horizontal: 32, vertical: 24),
-                child: Divider(color: Colors.deepOrange.shade200, thickness: 1.0,),
+                padding: const EdgeInsets.symmetric(horizontal: 72, vertical: 32),
+                child: Divider(color: Colors.green.shade200, thickness: 1.0,),
               ),
 
               const Text('don\'t have an Account? Click here', style: TextStyle(
@@ -89,9 +88,9 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
               ),
 
-              const Padding(
-                padding: EdgeInsets.symmetric(horizontal: 32, vertical: 24),
-                child: Divider(color: Colors.white, thickness: 1.0,),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 72, vertical: 32),
+                child: Divider(color: Colors.deepOrange.shade200, thickness: 1.0,),
               ),
 
             ],

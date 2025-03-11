@@ -36,7 +36,10 @@ class _SigninScreenState extends State<SigninScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(AppStrings.signInText, style: appBarTextStyles,),
+        title: Text(
+          AppStrings.signInText,
+          style: appBarTextStyles,
+        ),
         backgroundColor: Colors.black,
         automaticallyImplyLeading: false,
       ),
@@ -45,11 +48,11 @@ class _SigninScreenState extends State<SigninScreen> {
         width: MediaQuery.sizeOf(context).width,
         padding: const EdgeInsets.only(left: 10, right: 10, top: 10),
         color: const Color.fromARGB(255, 15, 15, 15),
-        child: SingleChildScrollView(
-          padding: const EdgeInsets.all(8),
-          child: Form(
-            key: formKey,
+        child: Form(
+          key: formKey,
+          child: SingleChildScrollView(
             child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 const CircleAvatar(
                   radius: 75,
@@ -61,13 +64,18 @@ class _SigninScreenState extends State<SigninScreen> {
                   ),
                 ),
                 const SizedBox(
-                  height: 8,
+                  height: 32,
                 ),
-
-                TextField(
+                TextFormField(
                   controller: emailController,
                   keyboardType: TextInputType.emailAddress,
-                  style: TextStyle(color: Colors.white),
+                  validator: (value) {
+                    if (value!.isEmpty) {
+                      return 'This Field is required.';
+                    }
+                    return null;
+                  },
+                  style: hintTextStyles,
                   decoration: InputDecoration(
                     prefixIcon: Icon(
                       Icons.email,
@@ -79,21 +87,29 @@ class _SigninScreenState extends State<SigninScreen> {
                     hintStyle: hintTextStyles,
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(16),
-                      borderSide: BorderSide(color: Colors.deepOrange, width: 3),
+                      borderSide:
+                          const BorderSide(color: Colors.deepOrange, width: 3),
                     ),
                     focusedBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(16),
-                      borderSide: BorderSide(color: Colors.deepOrange, width: 3),
+                      borderSide:
+                          const BorderSide(color: Colors.deepOrange, width: 3),
                     ),
                   ),
                 ),
-
-                const SizedBox(height: 12,),
-
-                TextField(
+                const SizedBox(
+                  height: 16,
+                ),
+                TextFormField(
                   controller: passwordController,
                   keyboardType: TextInputType.text,
-                  style: TextStyle(color: Colors.white),
+                  validator: (value) {
+                    if (value!.isEmpty) {
+                      return 'This Field is required.';
+                    }
+                    return null;
+                  },
+                  style: hintTextStyles,
                   obscureText: obscureStatus,
                   onChanged: (value) {
                     setState(() {});
@@ -108,8 +124,14 @@ class _SigninScreenState extends State<SigninScreen> {
                         obscureStatus = !obscureStatus;
                       }),
                       icon: obscureStatus
-                          ? Icon(Icons.visibility_off, color: Colors.grey.shade500,)
-                          : Icon(Icons.visibility, color: Colors.grey.shade500,),
+                          ? Icon(
+                              Icons.visibility_off,
+                              color: Colors.grey.shade500,
+                            )
+                          : Icon(
+                              Icons.visibility,
+                              color: Colors.grey.shade500,
+                            ),
                     ),
                     labelText: 'Password',
                     labelStyle: labelTextStyles,
@@ -117,22 +139,22 @@ class _SigninScreenState extends State<SigninScreen> {
                     hintStyle: hintTextStyles,
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(16),
-                      borderSide: BorderSide(color: Colors.deepOrange, width: 3),
+                      borderSide:
+                          const BorderSide(color: Colors.deepOrange, width: 3),
                     ),
                     focusedBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(16),
-                      borderSide: BorderSide(color: Colors.deepOrange, width: 3),
+                      borderSide:
+                          const BorderSide(color: Colors.deepOrange, width: 3),
                     ),
                   ),
                 ),
-
-
                 const SizedBox(
-                  height: 12,
+                  height: 32,
                 ),
                 FilledButton(
                   onPressed: () {
-                    if(formKey.currentState!.validate()){
+                    if (formKey.currentState!.validate()) {
                       Navigator.of(context).push(MaterialPageRoute(
                         builder: (context) => SecondScreen(
                           email: emailController.text,
@@ -160,19 +182,18 @@ class _SigninScreenState extends State<SigninScreen> {
                       //         content: Text('Invalid email or password')),
                       //   );
                       // }
-
                     }
                   },
                   style: FilledButton.styleFrom(
                       backgroundColor: Colors.green.shade500,
                       minimumSize:
-                      Size(MediaQuery.sizeOf(context).width / 2, 55)),
+                          Size(MediaQuery.sizeOf(context).width / 2, 55)),
                   child: const Text(
                     'SIGN IN',
                   ),
                 ),
                 const SizedBox(
-                  height: 16,
+                  height: 24,
                 ),
                 GestureDetector(
                   onTap: () {
@@ -185,6 +206,14 @@ class _SigninScreenState extends State<SigninScreen> {
                       color: Colors.deepOrange,
                       fontSize: 14,
                     ),
+                  ),
+                ),
+                Padding(
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 36, vertical: 4),
+                  child: Divider(
+                    color: Colors.orange.shade200,
+                    thickness: 1.0,
                   ),
                 ),
               ],
