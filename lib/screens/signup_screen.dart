@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../custom_widgets/checking_tiles.dart';
 import '../custom_widgets/heading_section.dart';
 import '../styles/app_constants.dart';
 import '../styles/text_style.dart';
@@ -26,24 +27,24 @@ class _SignupScreenState extends State<SignupScreen> {
   bool isEightCharacter = false;
   bool hasSymbol = false;
   bool hasOneDigit = false;
-  bool hasUpperCase = false;
   bool hasLowerCase = false;
+  bool hasUpperCase = false;
 
-  RegExp symbolRegEx = RegExp(r'[~`!@#$%^&*()_+=/]');
+  RegExp symbolRegEx = RegExp(r'[~`!@#\$%^&*()_+=]');
   RegExp numericRegEx = RegExp(r'[0-9]');
   RegExp upperRegEx = RegExp(r'[A-Z]');
   RegExp lowerRegEx = RegExp(r'[a-z]');
 
   void passwordValidator(String password) {
     setState(() {
-      isEightCharacter = false;
-      if (password.length >= 8) {
-        isEightCharacter = true;
-      }
-
       hasSymbol = false;
       if (symbolRegEx.hasMatch(password)) {
         hasSymbol = true;
+      }
+
+      isEightCharacter = false;
+      if (password.length >= 8) {
+        isEightCharacter = true;
       }
 
       hasOneDigit = false;
@@ -51,14 +52,14 @@ class _SignupScreenState extends State<SignupScreen> {
         hasOneDigit = true;
       }
 
-      hasUpperCase = false;
-      if (upperRegEx.hasMatch(password)) {
-        hasUpperCase = true;
-      }
-
       hasLowerCase = false;
       if (lowerRegEx.hasMatch(password)) {
         hasLowerCase = true;
+      }
+
+      hasUpperCase = false;
+      if (upperRegEx.hasMatch(password)) {
+        hasUpperCase = true;
       }
     });
   }
@@ -71,8 +72,8 @@ class _SignupScreenState extends State<SignupScreen> {
     if (!isEightCharacter ||
         !hasSymbol ||
         !hasOneDigit ||
-        !hasUpperCase ||
-        !hasLowerCase) {
+        !hasLowerCase ||
+        !hasUpperCase) {
       return 'Password does not match the Password Criteria';
     }
     return null;
@@ -121,7 +122,6 @@ class _SignupScreenState extends State<SignupScreen> {
           child: SingleChildScrollView(
             child: Column(
               children: [
-
                 const HeadingSection(
                   heading: AppStrings.signUpHeadingText,
                   subHeading: AppStrings.signUpSubHeadingText,
@@ -280,36 +280,36 @@ class _SignupScreenState extends State<SignupScreen> {
                   height: 12,
                 ),
                 CheckingTile(
-                  isCheck: isEightCharacter,
-                  title: 'Is Eight Character',
-                ),
-                const SizedBox(
-                  height: 10,
-                ),
-                CheckingTile(
-                  isCheck: hasSymbol,
-                  title: 'Contain Symbol (~`!@#\$%^&*()_+=/)',
-                ),
-                const SizedBox(
-                  height: 10,
-                ),
-                CheckingTile(
                   isCheck: hasOneDigit,
-                  title: 'Contain one Digit',
-                ),
-                const SizedBox(
-                  height: 10,
-                ),
-                CheckingTile(
-                  isCheck: hasUpperCase,
-                  title: 'Contains Lower Case',
+                  title: ' Contain One Digit',
                 ),
                 const SizedBox(
                   height: 10,
                 ),
                 CheckingTile(
                   isCheck: hasLowerCase,
-                  title: 'Contain Upper Case',
+                  title: ' Contain Lower Case',
+                ),
+                const SizedBox(
+                  height: 10,
+                ),
+                CheckingTile(
+                  isCheck: hasUpperCase,
+                  title: ' Contain Upper Case',
+                ),
+                const SizedBox(
+                  height: 10,
+                ),
+                CheckingTile(
+                  isCheck: isEightCharacter,
+                  title: ' Contain Eight Characters',
+                ),
+                const SizedBox(
+                  height: 10,
+                ),
+                CheckingTile(
+                  isCheck: hasSymbol,
+                  title: ' Contain Symbol (~`!@#\$%^&*()_+=/)',
                 ),
                 const SizedBox(
                   height: 10,
@@ -358,48 +358,6 @@ class _SignupScreenState extends State<SignupScreen> {
           ),
         ),
       ),
-    );
-  }
-}
-
-class CheckingTile extends StatelessWidget {
-  const CheckingTile({
-    super.key,
-    required this.isCheck,
-    required this.title,
-  });
-
-  final bool isCheck;
-  final String title;
-
-  @override
-  Widget build(BuildContext context) {
-    return Row(
-      children: [
-        const SizedBox(
-          height: 10,
-        ),
-        AnimatedContainer(
-          duration: const Duration(microseconds: 800),
-          decoration: BoxDecoration(
-              color: isCheck ? Colors.green : Colors.transparent,
-              borderRadius: BorderRadius.circular(50),
-              border: Border.all(
-                  color: isCheck ? Colors.transparent : Colors.green)),
-          child: Icon(
-            Icons.check,
-            size: 15,
-            color: isCheck ? Colors.white : Colors.grey.shade500,
-          ),
-        ),
-        const SizedBox(
-          height: 10,
-        ),
-        Text(
-          title,
-          style: labelTextStyles,
-        ),
-      ],
     );
   }
 }

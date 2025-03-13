@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:nexus_resumate/styles/app_theme.dart';
 
 TextStyle get appBarTextStyles {
   return GoogleFonts.montserrat(
@@ -46,5 +47,14 @@ TextStyle get inputTextStyles {
   return GoogleFonts.montserrat(
       textStyle: const TextStyle(
         color: Colors.white,
+      ));
+}
+
+TextStyle get myTextStyles {
+  return GoogleFonts.montserrat(
+      textStyle: TextStyle(
+        color: AppTheme.primary,
+        fontSize: 14,
+        fontWeight: FontWeight.bold,
       ));
 }
