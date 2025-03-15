@@ -40,7 +40,8 @@ class AppTextFormField extends StatelessWidget {
           prefixIcon: prefixIcon != null
               ? Icon(prefixIcon, color: const Color(0xFF003366))
               : null,
-          contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+          contentPadding:
+              const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
         ),
         cursorColor: AppTheme.primary,
         style: const TextStyle(

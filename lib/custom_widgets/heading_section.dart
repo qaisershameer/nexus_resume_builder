@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
-
 import '../styles/text_style.dart';
 
 class HeadingSection extends StatelessWidget {
   const HeadingSection({
-    super.key, required this.heading, required this.subHeading,
+    super.key,
+    required this.heading,
+    required this.subHeading,
   });
 
   final String heading;
@@ -15,9 +16,17 @@ class HeadingSection extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(heading, style: headingTextStyles,),
-        const SizedBox(height: 8,),
-        Text(subHeading, style: subHeadingTextStyles,),
+        Text(
+          heading,
+          style: headingTextStyles,
+        ),
+        const SizedBox(
+          height: 8,
+        ),
+        Text(
+          subHeading,
+          style: subHeadingTextStyles,
+        ),
       ],
     );
   }

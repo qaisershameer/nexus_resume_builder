@@ -1,4 +1,4 @@
-import 'package:nexus_resumate/models/user_model.dart';
+import '../models/user_model.dart';
 
 List<UserModel> users = [
   UserModel(name: 'admin', email: 'admin@gmail.com', password: '12345678', phone: '+923346013608'),

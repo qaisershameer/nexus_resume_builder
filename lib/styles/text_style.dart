@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:nexus_resumate/styles/app_theme.dart';
+import '../styles/app_theme.dart';
 
 TextStyle get appBarTextStyles {
   return GoogleFonts.montserrat(
