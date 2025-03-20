@@ -33,13 +33,14 @@ Future<File> generateResume(PdfPageFormat format,
   final pageTheme = await _myPageTheme(format);
 
   doc.addPage(pw.MultiPage(
+      theme: pageTheme.theme,
     build: (context) => [
       pw.Partition(
-          child: pw.Column(
-              crossAxisAlignment: pw.CrossAxisAlignment.start,
-              children: [
-            pw.Container(
-                padding: pw.EdgeInsets.only(left: 50, bottom: 20),
+        child: pw.Column(
+            crossAxisAlignment: pw.CrossAxisAlignment.start,
+            children: [
+              pw.Container(
+                padding: const pw.EdgeInsets.only(left: 50, bottom: 20),
                 child: pw.Column(
                     crossAxisAlignment: pw.CrossAxisAlignment.start,
                     children: [
@@ -47,24 +48,52 @@ Future<File> generateResume(PdfPageFormat format,
                           textScaleFactor: 2,
                           style: pw.Theme.of(context).defaultTextStyle.copyWith(
                                 fontWeight: pw.FontWeight.bold,
-                              )
-                      ),
-                        pw.SizedBox(height: 10.0),
-                        pw.Text(jobTitle,
-                            textScaleFactor: 1.2,
-                            style: pw.Theme.of(context).defaultTextStyle.copyWith(
+                              )),
+                      pw.SizedBox(height: 10.0),
+                      pw.Text(jobTitle,
+                          textScaleFactor: 1.2,
+                          style: pw.Theme.of(context).defaultTextStyle.copyWith(
                                 fontWeight: pw.FontWeight.bold,
                                 color: green,
-                            )
-                        ),
+                              )),
+                      pw.SizedBox(height: 10.0),
+                      pw.Text(
+                        'Date of Birth: $dateOfBirth',
+                      ),
+                      pw.Text(
+                        'Gender: $gender',
+                      ),
+                      pw.SizedBox(height: 10.0),
+                      pw.Row(
+                          crossAxisAlignment: pw.CrossAxisAlignment.start,
+                          children: [
+                            pw.Column(
+                                crossAxisAlignment: pw.CrossAxisAlignment.start,
+                                children: [
+                                  pw.Text(address),
+                                ]),
+                            pw.Column(children: [
+                              pw.Text(whatsApp),
+                              _UrlText(email, "mailto:$email"),
+                              _UrlText(webSite, "https//:$webSite"),
+                              pw.Text(webSite),
+                            ]),
+                          ]),
+                    ]),
+              ),
 
+              _Category(title: 'Interests'),
+              _Category(title: 'Work Experience'),
+              _Category(title: 'Education'),
+              // Video 50 minutes...
 
-                        // Video 40 minutes...
+              pw.Container(),
 
+              pw.Container(),
 
-
-                    ]))
-          ])),
+              pw.Container(),
+            ]),
+      ),
       pw.Partition(child: pw.Column()),
     ],
   ));
@@ -211,4 +240,70 @@ Future<pw.PageTheme> _myPageTheme(PdfPageFormat format) async {
           ]));
     },
   );
+}
+
+class _UrlText extends pw.StatelessWidget {
+  _UrlText(this.text, this.url);
+  final String text;
+  final String url;
+
+  @override
+  pw.Widget build(pw.Context context) {
+    return pw.UrlLink(
+        child: pw.Text(text,
+            style: const pw.TextStyle(
+              decoration: pw.TextDecoration.underline,
+              color: PdfColors.blue,
+            )),
+        destination: url);
+  }
+}
+
+class _Category extends pw.StatelessWidget {
+  _Category({required this.title});
+  final String title;
+
+  @override
+  pw.Widget build(pw.Context context) {
+    return pw.Container(
+      decoration: pw.BoxDecoration(
+        color: lightGreen,
+        borderRadius: pw.BorderRadius.circular(6),
+      ),
+      margin: const pw.EdgeInsets.only(bottom: 10, top: 20),
+      padding: const pw.EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+      child: pw.Text(title, textScaleFactor: 1.2),
+    );
+  }
+}
+
+class _Block extends pw.StatelessWidget {
+  _Block({required this.title, required this.description});
+  final String title;
+  final String description;
+  @override
+  pw.Widget build(pw.Context context) {
+    return pw.Column(
+        crossAxisAlignment: pw.CrossAxisAlignment.start,
+        children: [
+          pw.Row(children: [
+            pw.Container(
+              width: 6,
+              height: 6,
+              margin: const pw.EdgeInsets.only(top: 5.5, left: 2, right: 5),
+              decoration: const pw.BoxDecoration(
+                color: green,
+                shape: pw.BoxShape.circle,
+              ),
+            ),
+            pw.Text(
+              title,
+              style: pw.Theme.of(context)
+                  .defaultTextStyle
+                  .copyWith(fontWeight: pw.FontWeight.bold),
+            ),
+          ]),
+          pw.Container(),
+        ]);
+  }
 }
