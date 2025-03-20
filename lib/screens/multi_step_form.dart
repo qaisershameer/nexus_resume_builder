@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import '../custom_widgets/app_text_form_field.dart';
-import '../screens/pdf_screen.dart';
+import '../resume/resume_view.dart';
 import '../styles/app_theme.dart';
 import '../styles/text_style.dart';
 
