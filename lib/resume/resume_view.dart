@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:nexus_resumate/resume/resume_pdf.dart';
+import 'package:pdf/pdf.dart';
 import '../custom_widgets/my_app_button_icon.dart';
 import '../styles/app_constants.dart';
 import '../styles/text_style.dart';
@@ -14,6 +16,7 @@ class PdfScreen extends StatefulWidget {
       required this.address,
       required this.dateOfBirth,
       required this.gender,
+      required this.profileImage,
       required this.workExperiences,
       required this.educations,
       required this.skills,
@@ -29,6 +32,7 @@ class PdfScreen extends StatefulWidget {
   final String address;
   final String dateOfBirth;
   final String gender;
+  final String profileImage;
 
   // Work Experience , Education , Skills , Interests
   final List<Map<String, String>> workExperiences;
@@ -42,6 +46,34 @@ class PdfScreen extends StatefulWidget {
 }
 
 class _PdfScreenState extends State<PdfScreen> {
+  bool isGenerating = false;
+
+  Future<void> _generateResumePdf() async {
+    setState(() {
+      isGenerating = true;
+    });
+
+    try {
+      final file = await generateResume(
+          PdfPageFormat.letter,
+          name: widget.name,
+          jobTitle: widget.jobTitle,
+          whatsApp: widget.whatsApp,
+          email: widget.email,
+          webSite: widget.webSite,
+          address: widget.address,
+          dateOfBirth: widget.dateOfBirth,
+          gender: widget.gender,
+          profileImagePath: widget.profileImage,
+          workExperiences: widget.workExperiences,
+          educations: widget.educations,
+          skills: widget.skills,
+          interests: widget.selectedInterests);
+    } catch (e) {
+
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(

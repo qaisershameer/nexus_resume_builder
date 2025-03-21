@@ -29,8 +29,8 @@ class _MultiStepFormState extends State<MultiStepForm> {
   String address = '';
   String email = '';
   String webSite = '';
-  String profileImage =
-      'https://scontent.fmux3-1.fna.fbcdn.net/v/t1.6435-9/103950851_3022651741176366_2111611552960664682_n.jpg?_nc_cat=104&ccb=1-7&_nc_sid=a5f93a&_nc_ohc=q8Bw8n4PVZUQ7kNvgFjh5kY&_nc_oc=AdghKKFctfcK3GpWYq2ywiYWmPBb6Ky_PnB2dbiY-naLoCnCEYezEf5aHhMO56U-Z-Q&_nc_zt=23&_nc_ht=scontent.fmux3-1.fna&_nc_gid=Aa9JqPCngI6IhaZVwFFlEiH&oh=00_AYEj46Tb-aKh-E3kyaT9wsyiyy7gew5ySqkjOi_IFAxttw&oe=67F9DA31';
+  // String profileImage = 'https://scontent.fmux3-1.fna.fbcdn.net/v/t1.6435-9/103950851_3022651741176366_2111611552960664682_n.jpg?_nc_cat=104&ccb=1-7&_nc_sid=a5f93a&_nc_ohc=q8Bw8n4PVZUQ7kNvgFjh5kY&_nc_oc=AdghKKFctfcK3GpWYq2ywiYWmPBb6Ky_PnB2dbiY-naLoCnCEYezEf5aHhMO56U-Z-Q&_nc_zt=23&_nc_ht=scontent.fmux3-1.fna&_nc_gid=Aa9JqPCngI6IhaZVwFFlEiH&oh=00_AYEj46Tb-aKh-E3kyaT9wsyiyy7gew5ySqkjOi_IFAxttw&oe=67F9DA31';
+  String profileImage = 'assets/images/qaiser24.jpg';
   DateTime? dateOfBirth;
   String? gender;
 
@@ -114,6 +114,7 @@ class _MultiStepFormState extends State<MultiStepForm> {
                 address: address,
                 dateOfBirth: dateOfBirth.toString(),
                 gender: gender ?? 'Male',
+                profileImage: profileImage,
                 workExperiences: workExperiences,
                 educations: educations,
                 skills: skills,
@@ -513,6 +514,45 @@ class _MultiStepFormState extends State<MultiStepForm> {
                             });
                           },
                         ),
+
+                        // Interests
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+
+                            Text('Field of Interests', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: AppTheme.primary),),
+
+                            CheckboxListTile(title: const Text('Technology'), value: selectedInterests.contains('Technology'), onChanged: (value) {
+                              setState(() {
+                                if (value == true){
+                                  selectedInterests.add('Technology');
+                                } else {
+                                  selectedInterests.remove('Technology');
+                                }
+                              });
+                            },),
+                            CheckboxListTile(title: const Text('Sports'), value: selectedInterests.contains('Sports'), onChanged: (value) {
+                              setState(() {
+                                if (value == true){
+                                  selectedInterests.add('Sports');
+                                } else {
+                                  selectedInterests.remove('Sports');
+                                }
+                              });
+                            },),
+                            CheckboxListTile(title: const Text('Art'), value: selectedInterests.contains('Art'), onChanged: (value) {
+                              setState(() {
+                                if (value == true){
+                                  selectedInterests.add('Art');
+                                } else {
+                                  selectedInterests.remove('Art');
+                                }
+                              });
+                            },),
+
+                          ],
+                        ),
+
                       ],
                     ),
                   ),

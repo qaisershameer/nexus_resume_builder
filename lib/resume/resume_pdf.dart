@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'dart:math';
 import 'dart:typed_data';
+import 'package:path_provider/path_provider.dart';
 import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
 import 'package:flutter/services.dart' show rootBundle;
@@ -23,7 +24,7 @@ Future<File> generateResume(PdfPageFormat format,
     required List<Map<String, String>> workExperiences,
     required List<Map<String, String>> educations,
     required List<Map<String, dynamic>> skills,
-    required List<String> interest}) async {
+    required List<String> interests}) async {
   final doc = pw.Document(title: 'RESUME', author: name);
   final profileImage = pw.MemoryImage((await rootBundle.load(profileImagePath))
       .buffer
@@ -33,7 +34,7 @@ Future<File> generateResume(PdfPageFormat format,
   final pageTheme = await _myPageTheme(format);
 
   doc.addPage(pw.MultiPage(
-      theme: pageTheme.theme,
+    theme: pageTheme.theme,
     build: (context) => [
       pw.Partition(
         child: pw.Column(
@@ -81,20 +82,71 @@ Future<File> generateResume(PdfPageFormat format,
                           ]),
                     ]),
               ),
-
               _Category(title: 'Interests'),
-              _Category(title: 'Work Experience'),
+              for (var interest in interests) pw.Text('- $interest'),
+              pw.Row(
+                  crossAxisAlignment: pw.CrossAxisAlignment.start,
+                  children: [
+                    pw.Expanded(
+                      child: pw.Column(
+                          crossAxisAlignment: pw.CrossAxisAlignment.start,
+                          children: [
+                            _Category(title: 'Work Experience'),
+                            for (var work in workExperiences)
+                              _Block(
+                                  title: work['jobTitle'] ?? '',
+                                  description: work['jobDescription'] ?? ''),
+                          ]),
+                    ),
+                  ]),
               _Category(title: 'Education'),
-              // Video 50 minutes...
-
-              pw.Container(),
-
-              pw.Container(),
-
-              pw.Container(),
+              for (var edu in educations)
+                _Block(
+                    title: edu['degree'] ?? '',
+                    description:
+                        '${edu['educationDescription'] ?? ''}\n Level: ${edu['educationLevel']}'),
             ]),
       ),
-      pw.Partition(child: pw.Column()),
+      pw.Partition(width: sep,
+          child: pw.Column(
+            children: [
+              pw.Container(
+                height: pageTheme.pageFormat.availableHeight,
+                child: pw.Column(
+                  crossAxisAlignment: pw.CrossAxisAlignment.center,
+                  mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
+                  children: [
+                    pw.ClipOval(
+                      child: pw.Container(
+                        width: 100,
+                        height: 100,
+                        color: lightGreen,
+                        child: pw.Image(profileImage),
+                      ),
+                    ),
+                    pw.Column(children: [
+                      _Category(title: 'Skills'),
+                      for(var skill in skills)
+                        _Percent(size: 60, value: skill['skillProficiency'], title: skill['skill'])
+                    ]),
+
+                    pw.BarcodeWidget(
+                        data: 'https://qrdpro.com',
+                      height: 60,
+                      width: 60,
+                      barcode: pw.Barcode.qrCode(),
+                      drawText: false,
+                    ),
+
+
+
+                  ]
+                ),
+
+
+              ),
+            ]
+          ),),
     ],
   ));
 
@@ -208,9 +260,14 @@ Future<File> generateResume(PdfPageFormat format,
   //     }));
 
   // Save to file
-  final outputFile = File('${Directory.systemTemp.path}/resume.pdf');
-  await outputFile.writeAsBytes(await doc.save());
-  return outputFile;
+  // final outputFile = File('${Directory.systemTemp.path}/resume.pdf');
+  // await outputFile.writeAsBytes(await doc.save());
+  // return outputFile;
+
+  final outPutDirectory = await getApplicationCacheDirectory();
+  final file = File('${outPutDirectory.path}/resume.pdf');
+  await file.writeAsBytes(await doc.save());
+  return file;
 }
 
 Future<pw.PageTheme> _myPageTheme(PdfPageFormat format) async {
@@ -303,7 +360,51 @@ class _Block extends pw.StatelessWidget {
                   .copyWith(fontWeight: pw.FontWeight.bold),
             ),
           ]),
-          pw.Container(),
+          pw.Container(
+            decoration: const pw.BoxDecoration(
+              border: pw.Border(
+                left: pw.BorderSide(
+                  color: green,
+                  width: 2,
+                ),
+              ),
+            ),
+            margin: const pw.EdgeInsets.only(left: 5),
+            padding: const pw.EdgeInsets.only(left: 5, top: 5),
+            child: pw.Text(description),
+          ),
         ]);
   }
+}
+
+class _Percent extends pw.StatelessWidget {
+  _Percent({required this.size, required this.value, required this.title});
+  final double size;
+  final double value;
+  final pw.Widget title;
+
+  @override
+  pw.Widget build(pw.Context context) {
+    return pw.Column(
+      children: [
+        pw.Container(
+          height: size,
+          width: size,
+          child: pw.Stack(
+            children: [
+              pw.Center(
+                child: pw.Text('${(value*100).round()}%'),
+              ),
+              pw.CircularProgressIndicator(value: value,
+              backgroundColor: PdfColors.grey300,
+              color: green,
+                strokeWidth: 5,
+              ),
+            ]
+          ),
+        ),
+      ]
+    );
+  }
+
 }
