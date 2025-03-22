@@ -1,6 +1,6 @@
 import 'dart:io';
 import 'dart:math';
-import 'dart:typed_data';
+// import 'dart:typed_data';
 import 'package:path_provider/path_provider.dart';
 import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
@@ -26,9 +26,9 @@ Future<File> generateResume(PdfPageFormat format,
     required List<Map<String, dynamic>> skills,
     required List<String> interests}) async {
   final doc = pw.Document(title: 'RESUME', author: name);
-  final profileImage = pw.MemoryImage((await rootBundle.load(profileImagePath))
-      .buffer
-      .asInt8List() as Uint8List);
+  final profileImage = pw.MemoryImage(
+    (await rootBundle.load(profileImagePath)).buffer.asUint8List(),
+  );
 
   // Page theme
   final pageTheme = await _myPageTheme(format);
@@ -76,14 +76,18 @@ Future<File> generateResume(PdfPageFormat format,
                             pw.Column(children: [
                               pw.Text(whatsApp),
                               _UrlText(email, "mailto:$email"),
-                              _UrlText(webSite, "https//:$webSite"),
+                              _UrlText(webSite, "https://$webSite"),
                               pw.Text(webSite),
                             ]),
                           ]),
                     ]),
               ),
+
+              // Interests
               _Category(title: 'Interests'),
               for (var interest in interests) pw.Text('- $interest'),
+
+              // Work Experiences
               pw.Row(
                   crossAxisAlignment: pw.CrossAxisAlignment.start,
                   children: [
@@ -99,54 +103,58 @@ Future<File> generateResume(PdfPageFormat format,
                           ]),
                     ),
                   ]),
+
+              // Educations
               _Category(title: 'Education'),
               for (var edu in educations)
                 _Block(
-                    title: edu['degree'] ?? '',
+                    title: edu['eduDegree'] ?? '',
                     description:
-                        '${edu['educationDescription'] ?? ''}\n Level: ${edu['educationLevel']}'),
+                        '${edu['eduDescription'] ?? ''}\n Level: ${edu['eduLevel']}'),
             ]),
       ),
-      pw.Partition(width: sep,
-          child: pw.Column(
-            children: [
-              pw.Container(
-                height: pageTheme.pageFormat.availableHeight,
-                child: pw.Column(
-                  crossAxisAlignment: pw.CrossAxisAlignment.center,
-                  mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
-                  children: [
-                    pw.ClipOval(
-                      child: pw.Container(
-                        width: 100,
-                        height: 100,
-                        color: lightGreen,
-                        child: pw.Image(profileImage),
+
+      // SECOND PARTITION FOR IMAGE // SKILLS // BARCODE
+      pw.Partition(
+        width: sep,
+        child: pw.Column(children: [
+          pw.Container(
+            height: pageTheme.pageFormat.availableHeight,
+            child: pw.Column(
+                crossAxisAlignment: pw.CrossAxisAlignment.center,
+                mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
+                children: [
+                  pw.ClipOval(
+                    child: pw.Container(
+                      width: 100,
+                      height: 100,
+                      color: lightGreen,
+                      child: pw.Image(profileImage),
+                    ),
+                  ),
+                  pw.Column(children: [
+                    _Category(title: 'Skills'),
+                    for (var skill in skills)
+                      _Percent(
+                          size: 60,
+                          // value: 60.0,
+                          // value: double.parse(skill['skillProficiency'].toString()),
+                          value: skill['skillProficiency'],
+                          // title: skill['skill'] ?? ''),
+                          title: pw.Text(skill['skill'] ?? ''),
                       ),
-                    ),
-                    pw.Column(children: [
-                      _Category(title: 'Skills'),
-                      for(var skill in skills)
-                        _Percent(size: 60, value: skill['skillProficiency'], title: skill['skill'])
-                    ]),
-
-                    pw.BarcodeWidget(
-                        data: 'https://qrdpro.com',
-                      height: 60,
-                      width: 60,
-                      barcode: pw.Barcode.qrCode(),
-                      drawText: false,
-                    ),
-
-
-
-                  ]
-                ),
-
-
-              ),
-            ]
-          ),),
+                  ]),
+                  pw.BarcodeWidget(
+                    data: 'https://qrdpro.com',
+                    height: 60,
+                    width: 60,
+                    barcode: pw.Barcode.qrCode(),
+                    drawText: false,
+                  ),
+                ]),
+          ),
+        ]),
+      ),
     ],
   ));
 
@@ -268,6 +276,7 @@ Future<File> generateResume(PdfPageFormat format,
   final file = File('${outPutDirectory.path}/resume.pdf');
   await file.writeAsBytes(await doc.save());
   return file;
+
 }
 
 Future<pw.PageTheme> _myPageTheme(PdfPageFormat format) async {
@@ -385,26 +394,22 @@ class _Percent extends pw.StatelessWidget {
 
   @override
   pw.Widget build(pw.Context context) {
-    return pw.Column(
-      children: [
-        pw.Container(
-          height: size,
-          width: size,
-          child: pw.Stack(
-            children: [
-              pw.Center(
-                child: pw.Text('${(value*100).round()}%'),
-              ),
-              pw.CircularProgressIndicator(value: value,
-              backgroundColor: PdfColors.grey300,
-              color: green,
-                strokeWidth: 5,
-              ),
-            ]
+    return pw.Column(children: [
+      pw.Container(
+        height: size,
+        width: size,
+        child: pw.Stack(children: [
+          pw.Center(
+            child: pw.Text('${(value * 100).round()}%'),
           ),
-        ),
-      ]
-    );
+          pw.CircularProgressIndicator(
+            value: value,
+            backgroundColor: PdfColors.grey300,
+            color: green,
+            strokeWidth: 5,
+          ),
+        ]),
+      ),
+    ]);
   }
-
 }

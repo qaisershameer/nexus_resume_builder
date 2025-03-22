@@ -50,6 +50,14 @@ TextStyle get inputTextStyles {
       ));
 }
 
+TextStyle get myHeadingTextStyles {
+  return GoogleFonts.montserrat(
+      textStyle: const TextStyle(
+        fontSize: 20,
+        color: Colors.white,
+        fontWeight: FontWeight.bold,
+      ));
+}
 TextStyle get myTextStyles {
   return GoogleFonts.montserrat(
       textStyle: TextStyle(

@@ -68,6 +68,7 @@ class _SigninScreenState extends State<SigninScreen> {
                 TextFormField(
                   controller: emailController,
                   keyboardType: TextInputType.emailAddress,
+                  // initialValue: AppStrings.signInEmail??'',
                   validator: (value) {
                     if (value!.isEmpty) {
                       return 'This Field is required.';
@@ -102,6 +103,7 @@ class _SigninScreenState extends State<SigninScreen> {
                 TextFormField(
                   controller: passwordController,
                   keyboardType: TextInputType.text,
+                  // initialValue: AppStrings.signInPass??'',
                   validator: (value) {
                     if (value!.isEmpty) {
                       return 'This Field is required.';

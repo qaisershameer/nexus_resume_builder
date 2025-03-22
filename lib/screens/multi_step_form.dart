@@ -45,7 +45,7 @@ class _MultiStepFormState extends State<MultiStepForm> {
     'Bachelors',
     'Graduate',
     'Masters',
-    'PHD'
+    'P.H.D'
   ];
 
   // Temporary Variables for Step Inputs
@@ -118,7 +118,7 @@ class _MultiStepFormState extends State<MultiStepForm> {
                 workExperiences: workExperiences,
                 educations: educations,
                 skills: skills,
-                selectedInterests: selectedInterests,
+                interests: selectedInterests,
                 degreeList: degreeList),
           ));
           // generate resume pdf function here below
@@ -273,7 +273,7 @@ class _MultiStepFormState extends State<MultiStepForm> {
                               onTap: () async {
                                 DateTime? pickedDate = await showDatePicker(
                                     context: context,
-                                    initialDate: DateTime(2000),
+                                    initialDate: DateTime(1990),
                                     firstDate: DateTime(1971),
                                     lastDate: DateTime(2020));
                                 if (pickedDate != null) {
@@ -522,30 +522,66 @@ class _MultiStepFormState extends State<MultiStepForm> {
 
                             Text('Field of Interests', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: AppTheme.primary),),
 
-                            CheckboxListTile(title: const Text('Technology'), value: selectedInterests.contains('Technology'), onChanged: (value) {
+                            CheckboxListTile(title: const Text('Arts Designing'), value: selectedInterests.contains('Arts Designing'), onChanged: (value) {
                               setState(() {
                                 if (value == true){
-                                  selectedInterests.add('Technology');
+                                  selectedInterests.add('Arts Designing');
                                 } else {
-                                  selectedInterests.remove('Technology');
+                                  selectedInterests.remove('Arts Designing');
                                 }
                               });
                             },),
-                            CheckboxListTile(title: const Text('Sports'), value: selectedInterests.contains('Sports'), onChanged: (value) {
+                            CheckboxListTile(title: const Text('Technology Gossips'), value: selectedInterests.contains('Technology Gossips'), onChanged: (value) {
                               setState(() {
                                 if (value == true){
-                                  selectedInterests.add('Sports');
+                                  selectedInterests.add('Technology Gossips');
                                 } else {
-                                  selectedInterests.remove('Sports');
+                                  selectedInterests.remove('Technology Gossips');
                                 }
                               });
                             },),
-                            CheckboxListTile(title: const Text('Art'), value: selectedInterests.contains('Art'), onChanged: (value) {
+                            CheckboxListTile(title: const Text('App Development'), value: selectedInterests.contains('App Development'), onChanged: (value) {
                               setState(() {
                                 if (value == true){
-                                  selectedInterests.add('Art');
+                                  selectedInterests.add('App Development');
                                 } else {
-                                  selectedInterests.remove('Art');
+                                  selectedInterests.remove('App Development');
+                                }
+                              });
+                            },),
+                            CheckboxListTile(title: const Text('Web Development'), value: selectedInterests.contains('Web Development'), onChanged: (value) {
+                              setState(() {
+                                if (value == true){
+                                  selectedInterests.add('Web Development');
+                                } else {
+                                  selectedInterests.remove('Web Development');
+                                }
+                              });
+                            },),
+                            CheckboxListTile(title: const Text('Desktop Business Apps'), value: selectedInterests.contains('Desktop Business Apps'), onChanged: (value) {
+                              setState(() {
+                                if (value == true){
+                                  selectedInterests.add('Desktop Business Apps');
+                                } else {
+                                  selectedInterests.remove('Desktop Business Apps');
+                                }
+                              });
+                            },),
+                            CheckboxListTile(title: const Text('Sports -Cricket -Football'), value: selectedInterests.contains('Sports -Cricket -Football'), onChanged: (value) {
+                              setState(() {
+                                if (value == true){
+                                  selectedInterests.add('Sports -Cricket -Football');
+                                } else {
+                                  selectedInterests.remove('Sports -Cricket -Football');
+                                }
+                              });
+                            },),
+                            CheckboxListTile(title: const Text('Extras -Swimming -Reading'), value: selectedInterests.contains('Extras -Swimming -Reading'), onChanged: (value) {
+                              setState(() {
+                                if (value == true){
+                                  selectedInterests.add('Extras -Swimming -Reading');
+                                } else {
+                                  selectedInterests.remove('Extras -Swimming -Reading');
                                 }
                               });
                             },),
