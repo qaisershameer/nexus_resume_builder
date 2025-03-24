@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:nexus_resumate/resume/resume_pdf.dart';
-import 'package:open_file/open_file.dart';
+import '../resume/resume_pdf.dart';
 import 'package:pdf/pdf.dart';
+import 'package:open_file/open_file.dart';
 import '../custom_widgets/my_app_button_icon.dart';
 import '../styles/app_constants.dart';
 import '../styles/text_style.dart';
 
-class PdfScreen extends StatefulWidget {
-  const PdfScreen(
+class ResumeView extends StatefulWidget {
+  const ResumeView(
       {super.key,
       required this.name,
       required this.jobTitle,
@@ -43,10 +43,10 @@ class PdfScreen extends StatefulWidget {
   final List<String> degreeList;
 
   @override
-  State<PdfScreen> createState() => _PdfScreenState();
+  State<ResumeView> createState() => _ResumeViewState();
 }
 
-class _PdfScreenState extends State<PdfScreen> {
+class _ResumeViewState extends State<ResumeView> {
   bool isGenerating = false;
 
   Future<void> _generateResumePdf() async {
@@ -64,7 +64,7 @@ class _PdfScreenState extends State<PdfScreen> {
           email: widget.email,
           webSite: widget.webSite,
           address: widget.address,
-          dateOfBirth: widget.dateOfBirth,
+          dateOfBirth: widget.dateOfBirth.toString(),
           gender: widget.gender,
           profileImagePath: widget.profileImage,
           workExperiences: widget.workExperiences,
@@ -72,7 +72,7 @@ class _PdfScreenState extends State<PdfScreen> {
           skills: widget.skills,
           interests: widget.interests);
 
-      // Message Show in Status Bar
+      // Success Message Show in Status Bar
       ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
           duration: Duration(seconds: 2),
           behavior: SnackBarBehavior.floating,
@@ -83,7 +83,7 @@ class _PdfScreenState extends State<PdfScreen> {
 
     } catch (e) {
       debugPrint('Error $e');
-      // Message Show in Status Bar
+      // Error Message Show in Status Bar
       ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
           duration: Duration(seconds: 2),
           behavior: SnackBarBehavior.floating,
@@ -184,6 +184,9 @@ class _PdfScreenState extends State<PdfScreen> {
                   ),
 
                   // Working Experience
+
+                  // Working Experience // Job Title
+                  if (widget.workExperiences.isNotEmpty)
                   Text(
                     'Designation: ${widget.workExperiences[0]['jobTitle']}',
                     style: labelTextStyles,
@@ -191,6 +194,9 @@ class _PdfScreenState extends State<PdfScreen> {
                   const SizedBox(
                     height: 8,
                   ),
+
+                  // Working Experience // Job Company
+                  if (widget.workExperiences.isNotEmpty)
                   Text(
                     'Company: ${widget.workExperiences[0]['jobCompany']}',
                     style: labelTextStyles,
@@ -198,6 +204,9 @@ class _PdfScreenState extends State<PdfScreen> {
                   const SizedBox(
                     height: 8,
                   ),
+
+                  // Working Experience // Job Description
+                  if (widget.workExperiences.isNotEmpty)
                   Text(
                     'Work Details: ${widget.workExperiences[0]['jobDescription']}',
                     style: labelTextStyles,
@@ -213,6 +222,9 @@ class _PdfScreenState extends State<PdfScreen> {
                   ),
 
                   // Education Details
+
+                  // Education Details // Edu Degree
+                  if (widget.educations.isNotEmpty)
                   Text(
                     'Degree: ${widget.educations[0]['eduDegree']}',
                     style: labelTextStyles,
@@ -220,6 +232,9 @@ class _PdfScreenState extends State<PdfScreen> {
                   const SizedBox(
                     height: 8,
                   ),
+
+                  // Education Details // Edu Institute
+                  if (widget.educations.isNotEmpty)
                   Text(
                     'Institute: ${widget.educations[0]['eduInstitute']}',
                     style: labelTextStyles,
@@ -227,6 +242,9 @@ class _PdfScreenState extends State<PdfScreen> {
                   const SizedBox(
                     height: 8,
                   ),
+
+                  // Education Details // Edu Description
+                  if (widget.educations.isNotEmpty)
                   Text(
                     'Details: ${widget.educations[0]['eduDescription']}',
                     style: labelTextStyles,
@@ -234,6 +252,9 @@ class _PdfScreenState extends State<PdfScreen> {
                   const SizedBox(
                     height: 8,
                   ),
+
+                  // Education Details // Edu Level
+                  if (widget.educations.isNotEmpty)
                   Text(
                     'Level: ${widget.educations[0]['eduLevel']}',
                     style: labelTextStyles,
@@ -249,6 +270,9 @@ class _PdfScreenState extends State<PdfScreen> {
                   ),
 
                   // Skills
+
+                  // Skills // Skill
+                  if (widget.skills.isNotEmpty)
                   Text(
                     'Skills: ${widget.skills[0]['skill']}',
                     style: labelTextStyles,
@@ -256,6 +280,8 @@ class _PdfScreenState extends State<PdfScreen> {
                   const SizedBox(
                     height: 4,
                   ),
+
+                  // Skills // Skill Proficiency
                   Text(
                     'Proficiency: ${(widget.skills[0]['skillProficiency'] * 100).round()}%',
                     style: labelTextStyles,
@@ -286,7 +312,14 @@ class _PdfScreenState extends State<PdfScreen> {
 
                       // Edit Resume Button
                       MyAppButtonIcon(
-                          myOnPressed: () => Navigator.of(context).pop(),
+                          myOnPressed: () {
+
+                            // // Before navigating back, clear any previous data in the lists
+                            // widget.workExperiences.clear();
+                            // widget.educations.clear();
+                            // widget.skills.clear();
+
+                            Navigator.of(context).pop();},
                           buttonText: 'Edit Resume',
                           buttonIcon: const Icon(Icons.note_alt_rounded)),
 
@@ -307,10 +340,19 @@ class _PdfScreenState extends State<PdfScreen> {
           ),
         ),
         if(isGenerating)
+
           Positioned.fill(child: Container(
-            color: Colors.red.withAlpha(50),
-            child: const Center(child: CircularProgressIndicator(),),
-          ))
+            height: 50,
+            width: 50,
+            color: Colors.teal.withAlpha(50),
+            child: const Center(
+              child: CircularProgressIndicator(
+                value: 50,
+                strokeWidth: 5,
+              ),
+            ),
+          ),
+          ),
       ],
     );
   }

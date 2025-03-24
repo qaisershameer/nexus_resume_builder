@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import '../custom_widgets/heading_section.dart';
-import '../screens/multi_step_form.dart';
+import '../resume/multi_step_form.dart';
 import '../styles/app_constants.dart';
 import '../styles/text_style.dart';
 
@@ -43,7 +43,7 @@ class _SecondScreenState extends State<SecondScreen> {
                 backgroundColor: Colors.white,
                 child: CircleAvatar(
                   radius: 90,
-                  backgroundImage: AssetImage('assets/images/qaiser24.jpg'),
+                  backgroundImage: AssetImage(AppStrings.image24),
                 ),
               ),
 

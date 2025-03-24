@@ -59,7 +59,7 @@ class _SigninScreenState extends State<SigninScreen> {
                   backgroundColor: Colors.white,
                   child: CircleAvatar(
                     radius: 70,
-                    backgroundImage: AssetImage('assets/images/qaiser21.jpg'),
+                    backgroundImage: AssetImage(AppStrings.image21),
                   ),
                 ),
                 const SizedBox(

@@ -1,6 +1,5 @@
 import 'dart:io';
 import 'dart:math';
-// import 'dart:typed_data';
 import 'package:path_provider/path_provider.dart';
 import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
@@ -25,9 +24,12 @@ Future<File> generateResume(PdfPageFormat format,
     required List<Map<String, String>> educations,
     required List<Map<String, dynamic>> skills,
     required List<String> interests}) async {
+
+  // document title author name
   final doc = pw.Document(title: 'RESUME', author: name);
-  final profileImage = pw.MemoryImage(
-    (await rootBundle.load(profileImagePath)).buffer.asUint8List(),
+
+  // resume profile image
+  final profileImage = pw.MemoryImage((await rootBundle.load(profileImagePath)).buffer.asUint8List(),
   );
 
   // Page theme
@@ -36,278 +38,222 @@ Future<File> generateResume(PdfPageFormat format,
   doc.addPage(pw.MultiPage(
     theme: pageTheme.theme,
     build: (context) => [
-      pw.Partition(
-        child: pw.Column(
-            crossAxisAlignment: pw.CrossAxisAlignment.start,
-            children: [
-              pw.Container(
-                padding: const pw.EdgeInsets.only(left: 50, bottom: 20),
-                child: pw.Column(
+      pw.Partitions(children: [
+        // FIRST PARTITION FOR PERSONAL INFO // INTERESTS // WORK-EXP // EDUCATION
+        pw.Partition(
+          child: pw.Column(
+              crossAxisAlignment: pw.CrossAxisAlignment.start,
+              children: [
+                pw.Container(
+                  padding: const pw.EdgeInsets.only(left: 50, bottom: 20),
+
+                  // Personal Information
+                  child: pw.Column(
+                      crossAxisAlignment: pw.CrossAxisAlignment.start,
+                      children: [
+                        // Personal Information // Name
+                        pw.Text(name,
+                            textScaleFactor: 2,
+                            style:
+                                pw.Theme.of(context).defaultTextStyle.copyWith(
+                                      fontWeight: pw.FontWeight.bold,
+                                    )),
+                        pw.SizedBox(height: 10.0),
+
+                        // Personal Information // Job Title
+                        pw.Text(jobTitle,
+                            textScaleFactor: 1.2,
+                            style:
+                                pw.Theme.of(context).defaultTextStyle.copyWith(
+                                      fontWeight: pw.FontWeight.bold,
+                                      color: green,
+                                    )),
+                        pw.SizedBox(height: 10.0),
+
+                        // Personal Information // Date of Birth
+                        pw.Text(
+                          'Date of Birth: $dateOfBirth',
+                        ),
+
+                        // Personal Information // Gender
+                        pw.Text(
+                          'Gender: $gender',
+                        ),
+                        pw.SizedBox(height: 10.0),
+
+                        // Personal Information // -Address -WhatsApp -Email -Website
+                        pw.Row(
+                            crossAxisAlignment: pw.CrossAxisAlignment.start,
+                            children: [
+                              pw.Column(
+                                  crossAxisAlignment:
+                                      pw.CrossAxisAlignment.start,
+                                  children: [
+                                    // Personal Information // Address
+                                    pw.Text(address),
+                                  ]),
+                              pw.Column(children: [
+                                // Personal Information // WhatsApp
+                                pw.Text(whatsApp),
+
+                                // Personal Information // Email
+                                _UrlText(email, "mailto:$email"),
+
+                                // Personal Information // WebSite
+                                _UrlText(webSite, "https://$webSite"),
+                              ]),
+                            ]),
+                      ]),
+                ),
+
+                // Interests
+                _Category(title: 'Interests'),
+
+                // Interests List Selected Check-Boxes Loop
+                for (var interest in interests)
+
+                  // Interests Data From Above Loop
+                  pw.Text('- $interest'),
+
+                // Work Experiences // Educations
+                pw.Row(
                     crossAxisAlignment: pw.CrossAxisAlignment.start,
                     children: [
-                      pw.Text(name,
-                          textScaleFactor: 2,
-                          style: pw.Theme.of(context).defaultTextStyle.copyWith(
-                                fontWeight: pw.FontWeight.bold,
-                              )),
-                      pw.SizedBox(height: 10.0),
-                      pw.Text(jobTitle,
-                          textScaleFactor: 1.2,
-                          style: pw.Theme.of(context).defaultTextStyle.copyWith(
-                                fontWeight: pw.FontWeight.bold,
-                                color: green,
-                              )),
-                      pw.SizedBox(height: 10.0),
-                      pw.Text(
-                        'Date of Birth: $dateOfBirth',
-                      ),
-                      pw.Text(
-                        'Gender: $gender',
-                      ),
-                      pw.SizedBox(height: 10.0),
-                      pw.Row(
-                          crossAxisAlignment: pw.CrossAxisAlignment.start,
-                          children: [
-                            pw.Column(
-                                crossAxisAlignment: pw.CrossAxisAlignment.start,
-                                children: [
-                                  pw.Text(address),
-                                ]),
-                            pw.Column(children: [
-                              pw.Text(whatsApp),
-                              _UrlText(email, "mailto:$email"),
-                              _UrlText(webSite, "https://$webSite"),
-                              pw.Text(webSite),
+                      pw.Expanded(
+                        child: pw.Column(
+                            crossAxisAlignment: pw.CrossAxisAlignment.start,
+                            children: [
+                              // Work Experiences
+                              _Category(title: 'Work Experience'),
+                              for (var work in workExperiences)
+
+                                // Work Experiences Block // Job Title // Job Description
+                                _Block(
+                                    title: work['jobTitle'] ?? '',
+                                    description: work['jobDescription'] ?? ''),
                             ]),
-                          ]),
-                    ]),
-              ),
-
-              // Interests
-              _Category(title: 'Interests'),
-              for (var interest in interests) pw.Text('- $interest'),
-
-              // Work Experiences
-              pw.Row(
-                  crossAxisAlignment: pw.CrossAxisAlignment.start,
-                  children: [
-                    pw.Expanded(
-                      child: pw.Column(
-                          crossAxisAlignment: pw.CrossAxisAlignment.start,
-                          children: [
-                            _Category(title: 'Work Experience'),
-                            for (var work in workExperiences)
-                              _Block(
-                                  title: work['jobTitle'] ?? '',
-                                  description: work['jobDescription'] ?? ''),
-                          ]),
-                    ),
-                  ]),
-
-              // Educations
-              _Category(title: 'Education'),
-              for (var edu in educations)
-                _Block(
-                    title: edu['eduDegree'] ?? '',
-                    description:
-                        '${edu['eduDescription'] ?? ''}\n Level: ${edu['eduLevel']}'),
-            ]),
-      ),
-
-      // SECOND PARTITION FOR IMAGE // SKILLS // BARCODE
-      pw.Partition(
-        width: sep,
-        child: pw.Column(children: [
-          pw.Container(
-            height: pageTheme.pageFormat.availableHeight,
-            child: pw.Column(
-                crossAxisAlignment: pw.CrossAxisAlignment.center,
-                mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
-                children: [
-                  pw.ClipOval(
-                    child: pw.Container(
-                      width: 100,
-                      height: 100,
-                      color: lightGreen,
-                      child: pw.Image(profileImage),
-                    ),
-                  ),
-                  pw.Column(children: [
-                    _Category(title: 'Skills'),
-                    for (var skill in skills)
-                      _Percent(
-                          size: 60,
-                          // value: 60.0,
-                          // value: double.parse(skill['skillProficiency'].toString()),
-                          value: skill['skillProficiency'],
-                          // title: skill['skill'] ?? ''),
-                          title: pw.Text(skill['skill'] ?? ''),
                       ),
+                    ]),
+
+                // Educations Block Starting
+                _Category(title: 'Education'),
+                for (var edu in educations)
+
+                  // Educations Block // Degree // Description // Level // Institute
+                  _Block(
+                      title: edu['eduDegree'] ?? '',
+                      description:
+                          '${edu['eduDescription'] ?? ''} \nLevel: ${edu['eduLevel']} \nFrom: ${edu['eduInstitute']}'),
+              ]),
+        ),
+
+        // SECOND PARTITION FOR IMAGE // SKILLS // BARCODE
+        pw.Partition(
+          width: sep,
+          child: pw.Column(children: [
+            pw.Container(
+              height: pageTheme.pageFormat.availableHeight,
+              child: pw.Column(
+                  crossAxisAlignment: pw.CrossAxisAlignment.center,
+                  mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
+                  children: [
+                    // Profile Memory Image
+                    pw.ClipOval(
+                      child: pw.Container(
+                        width: 100,
+                        height: 100,
+                        color: lightGreen,
+                        child: pw.Image(profileImage),
+                      ),
+                    ),
+
+                    // Skills
+                    pw.Column(
+                        crossAxisAlignment: pw.CrossAxisAlignment.center,
+                        children: [
+                          _Category(title: 'Skills'),
+                          for (var skill in skills)
+
+                            // Round Circle Widget with Value
+                            _Percent(
+                              size: 60,
+                              value: skill['skillProficiency'],
+                              title: pw.Center(
+                                  child: pw.Text(skill['skill'] ?? '')),
+                            ),
+                        ]),
+
+                    // Barcode
+                    pw.BarcodeWidget(
+                      data: webSite,
+                      height: 60,
+                      width: 60,
+                      barcode: pw.Barcode.qrCode(),
+                      drawText: false,
+                    ),
                   ]),
-                  pw.BarcodeWidget(
-                    data: 'https://qrdpro.com',
-                    height: 60,
-                    width: 60,
-                    barcode: pw.Barcode.qrCode(),
-                    drawText: false,
-                  ),
-                ]),
-          ),
-        ]),
-      ),
+            ),
+          ]),
+        ),
+      ]),
     ],
   ));
 
-  // doc.addPage(pw.Page(
-  //     theme: pageTheme,
-  //     build: (context) {
-  //       return pw.Column(
-  //         crossAxisAlignment: pw.CrossAxisAlignment.start,
-  //         children: [
-  //           // Header with profile image and name
-  //           pw.Row(
-  //             children: [
-  //               pw.Image(profileImage, width: 100, height: 100),
-  //               pw.SizedBox(width: 20),
-  //               pw.Column(
-  //                 crossAxisAlignment: pw.CrossAxisAlignment.start,
-  //                 children: [
-  //                   pw.Text(name,
-  //                       style: pw.TextStyle(
-  //                           fontSize: 24, fontWeight: pw.FontWeight.bold)),
-  //                   pw.Text(jobTitle, style: const pw.TextStyle(fontSize: 18)),
-  //                   pw.Text('WhatsApp: $whatsApp'),
-  //                   pw.Text('Email: $email'),
-  //                   pw.Text('Website: $webSite'),
-  //                   pw.Text('Address: $address'),
-  //                   pw.Text('Date of Birth: $dateOfBirth'),
-  //                   pw.Text('Gender: $gender'),
-  //                 ],
-  //               ),
-  //             ],
-  //           ),
-  //
-  //           // Separator line
-  //           pw.Divider(),
-  //
-  //           // Work Experience
-  //           pw.Text('Work Experience',
-  //               style:
-  //                   pw.TextStyle(fontSize: 18, fontWeight: pw.FontWeight.bold)),
-  //           ...workExperiences.map((experience) {
-  //             return pw.Column(
-  //               crossAxisAlignment: pw.CrossAxisAlignment.start,
-  //               children: [
-  //                 pw.Text(experience['jobTitle'] ?? '',
-  //                     style: const pw.TextStyle(fontSize: 16)),
-  //                 pw.Text(experience['companyName'] ?? '',
-  //                     style: const pw.TextStyle(fontSize: 14)),
-  //                 pw.Text(experience['duration'] ?? '',
-  //                     style: const pw.TextStyle(fontSize: 12)),
-  //                 pw.Text(experience['description'] ?? '',
-  //                     style: const pw.TextStyle(fontSize: 12)),
-  //               ],
-  //             );
-  //           }),
-  //
-  //           // Separator line
-  //           pw.Divider(),
-  //
-  //           // Education
-  //           pw.Text('Education',
-  //               style:
-  //                   pw.TextStyle(fontSize: 18, fontWeight: pw.FontWeight.bold)),
-  //           ...educations.map((education) {
-  //             return pw.Column(
-  //               crossAxisAlignment: pw.CrossAxisAlignment.start,
-  //               children: [
-  //                 pw.Text(education['degree'] ?? '',
-  //                     style: const pw.TextStyle(fontSize: 16)),
-  //                 pw.Text(education['institution'] ?? '',
-  //                     style: const pw.TextStyle(fontSize: 14)),
-  //                 pw.Text(education['duration'] ?? '',
-  //                     style: const pw.TextStyle(fontSize: 12)),
-  //               ],
-  //             );
-  //           }),
-  //
-  //           // Separator line
-  //           pw.Divider(),
-  //
-  //           // Skills
-  //           pw.Text('Skills',
-  //               style:
-  //                   pw.TextStyle(fontSize: 18, fontWeight: pw.FontWeight.bold)),
-  //           pw.Wrap(
-  //             children: skills.map((skill) {
-  //               return pw.Container(
-  //                 margin: const pw.EdgeInsets.only(right: 8, bottom: 8),
-  //                 padding: const pw.EdgeInsets.all(8),
-  //                 decoration: pw.BoxDecoration(
-  //                   border: pw.Border.all(
-  //                       color: const PdfColor.fromInt(0xffcccccc)),
-  //                   borderRadius: pw.BorderRadius.circular(5),
-  //                 ),
-  //                 child: pw.Text(skill['name'] ?? '',
-  //                     style: const pw.TextStyle(fontSize: 12)),
-  //               );
-  //             }).toList(),
-  //           ),
-  //
-  //           // Separator line
-  //           pw.Divider(),
-  //
-  //           // Interests
-  //           pw.Text('Interests',
-  //               style:
-  //                   pw.TextStyle(fontSize: 18, fontWeight: pw.FontWeight.bold)),
-  //           pw.Text(interest.join(', '),
-  //               style: const pw.TextStyle(fontSize: 14)),
-  //         ],
-  //       );
-  //     }));
-
-  // Save to file
-  // final outputFile = File('${Directory.systemTemp.path}/resume.pdf');
-  // await outputFile.writeAsBytes(await doc.save());
-  // return outputFile;
-
+  // App Directory // File Path -1st Step
   final outPutDirectory = await getApplicationCacheDirectory();
-  final file = File('${outPutDirectory.path}/resume.pdf');
-  await file.writeAsBytes(await doc.save());
-  return file;
 
+  // App Directory // File Name - File Object -2nd Step
+  final file = File('${outPutDirectory.path}/resume.pdf');
+
+  // App Directory // File Write-Save -3rd Step
+  await file.writeAsBytes(await doc.save());
+
+  // App Directory // File Open-Load-Return -4th Step
+  return file;
 }
 
+// PDF Page Theme
 Future<pw.PageTheme> _myPageTheme(PdfPageFormat format) async {
+  // PDF Page Theme // Background Border SVG File Path-Name
   final bgShape = await rootBundle.loadString('assets/images/resume.svg');
+  // PDF Page Theme // Page Margins
   format = format.applyMargin(
       left: PdfPageFormat.cm * 2.0,
       top: 4.0,
       right: PdfPageFormat.cm * 2.0,
       bottom: PdfPageFormat.cm * 2.0);
+  // PDF Page Theme // Return Theme
   return pw.PageTheme(
     pageFormat: format,
+    // PDF Page Theme // Fonts Settings
     theme: pw.ThemeData.withFont(
       base: await PdfGoogleFonts.openSansRegular(),
       bold: await PdfGoogleFonts.openSansBold(),
       icons: await PdfGoogleFonts.materialIcons(),
     ),
+    // PDF Page Theme // Background Border SVG Apply Locations
     buildBackground: (pw.Context context) {
       return pw.FullPage(
-          ignoreMargins: true,
-          child: pw.Stack(children: [
-            pw.Positioned(top: 0, left: 0, child: pw.SvgImage(svg: bgShape)),
-            pw.Positioned(
-                bottom: 0,
-                right: 0,
-                child: pw.Transform.rotate(
-                    angle: pi, child: pw.SvgImage(svg: bgShape))),
-          ]));
+        ignoreMargins: true,
+        child: pw.Stack(children: [
+          // top left side border svg
+          pw.Positioned(top: 0, left: 0, child: pw.SvgImage(svg: bgShape)),
+          // bottom right side border svg Transform Rotate
+          pw.Positioned(
+            bottom: 0,
+            right: 0,
+            child: pw.Transform.rotate(
+              angle: pi,
+              child: pw.SvgImage(svg: bgShape),
+            ),
+          ),
+        ]),
+      );
     },
   );
 }
 
+// Url Text Class for Website - Emails
 class _UrlText extends pw.StatelessWidget {
   _UrlText(this.text, this.url);
   final String text;
@@ -325,6 +271,7 @@ class _UrlText extends pw.StatelessWidget {
   }
 }
 
+// Category Class for Headings with Circle Bullet
 class _Category extends pw.StatelessWidget {
   _Category({required this.title});
   final String title;
@@ -343,6 +290,7 @@ class _Category extends pw.StatelessWidget {
   }
 }
 
+// Block Class for Heading & Descriptions
 class _Block extends pw.StatelessWidget {
   _Block({required this.title, required this.description});
   final String title;
@@ -386,6 +334,7 @@ class _Block extends pw.StatelessWidget {
   }
 }
 
+// Percent Class for Round Circle of Skills with % Filling and Title
 class _Percent extends pw.StatelessWidget {
   _Percent({required this.size, required this.value, required this.title});
   final double size;
@@ -395,13 +344,19 @@ class _Percent extends pw.StatelessWidget {
   @override
   pw.Widget build(pw.Context context) {
     return pw.Column(children: [
+      // Container
       pw.Container(
         height: size,
         width: size,
+
+        // Stack for Overlapping Values Display
         child: pw.Stack(children: [
+          // %age Value
           pw.Center(
             child: pw.Text('${(value * 100).round()}%'),
           ),
+
+          // Circle with Fill Value
           pw.CircularProgressIndicator(
             value: value,
             backgroundColor: PdfColors.grey300,
@@ -410,6 +365,9 @@ class _Percent extends pw.StatelessWidget {
           ),
         ]),
       ),
+
+      // Directly Display Title Widget after Round Circle with Value
+      title,
     ]);
   }
 }

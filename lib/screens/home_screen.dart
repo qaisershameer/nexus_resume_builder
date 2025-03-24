@@ -40,7 +40,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 backgroundColor: Colors.white,
                 child: CircleAvatar(
                   radius: 90,
-                  backgroundImage: AssetImage('assets/images/qaiser20.jpg'),
+                  backgroundImage: AssetImage(AppStrings.image20),
                 ),
               ),
               const Padding(
