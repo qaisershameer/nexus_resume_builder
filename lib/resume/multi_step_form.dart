@@ -38,7 +38,12 @@ class _MultiStepFormState extends State<MultiStepForm> {
   // Work Experience , Education , Skills , Interests
   List<Map<String, String>> workExperiences = [];
   List<Map<String, String>> educations = [];
+
+  // Add Multi Skills Working
   List<Map<String, dynamic>> skills = [];
+  // List<TextEditingController> skillControllers = [];
+  // List<double> proficiencyValues = [];
+
   List<String> selectedInterests = [];
   List<String> degreeList = [
     'Matriculation',
@@ -115,6 +120,24 @@ class _MultiStepFormState extends State<MultiStepForm> {
 
         tempSkill = '';
         tempSkillProficiency = 0.5;
+
+        // // Add each skill and its proficiency value to the list
+        // for (int i = 0; i < skillControllers.length; i++) {
+        //   String skillName = skillControllers[i].text;
+        //   double skillProficiency = proficiencyValues[i];
+        //
+        //   if (skillName.isNotEmpty) {
+        //     skills.add({
+        //       'skill': skillName,
+        //       'skillProficiency': skillProficiency,
+        //     });
+        //   }
+        // }
+        //
+        // // Reset fields for next step
+        // skillControllers.clear();
+        // proficiencyValues.clear();
+
       }
 
       setState(() {
@@ -154,6 +177,15 @@ class _MultiStepFormState extends State<MultiStepForm> {
       });
     }
   }
+
+  // @override
+  // void dispose() {
+  //   // Dispose all controllers to free up resources
+  //   for (var controller in skillControllers) {
+  //     controller.dispose();
+  //   }
+  //   super.dispose();
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -515,6 +547,7 @@ class _MultiStepFormState extends State<MultiStepForm> {
                     key: _formKeys[3],
                     child: Column(
                       children: [
+
                         // Skill Name
                         AppTextFormField(
                           hintText: 'Skill Name',
@@ -540,6 +573,47 @@ class _MultiStepFormState extends State<MultiStepForm> {
                           },
                         ),
 
+                        // // Display skill input fields
+                        // ListView.builder(
+                        //   itemCount: skillControllers.length,
+                        //   itemBuilder: (context, index) {
+                        //     return Column(
+                        //       children: [
+                        //         // Skill Name Input
+                        //         AppTextFormField(
+                        //           controller: skillControllers[index],
+                        //           hintText: 'Skill Name',
+                        //           prefixIcon: Icons.description_sharp,
+                        //           validator: (value) => value == null || value.isEmpty ? 'Required' : null,
+                        //         ),
+                        //         // Skill Proficiency Slider
+                        //         Slider(
+                        //           value: proficiencyValues[index],
+                        //           min: 0,
+                        //           max: 1,
+                        //           divisions: 10,
+                        //           label: '${(proficiencyValues[index] * 100).round()}%',
+                        //           onChanged: (value) {
+                        //             setState(() {
+                        //               proficiencyValues[index] = value;
+                        //             });
+                        //           },
+                        //         ),
+                        //       ],
+                        //     );
+                        //   },
+                        // ),
+                        // // Add Skill Button
+                        // IconButton(
+                        //   icon: const Icon(Icons.add),
+                        //   onPressed: () {
+                        //     setState(() {
+                        //       skillControllers.add(TextEditingController());
+                        //       proficiencyValues.add(0.5); // Default proficiency
+                        //     });
+                        //   },
+                        // ),
+
                         // Interests
                         Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
@@ -556,15 +630,6 @@ class _MultiStepFormState extends State<MultiStepForm> {
                                 }
                               });
                             },),
-                            CheckboxListTile(title: const Text('Technology Gossips'), value: selectedInterests.contains('Technology Gossips'), onChanged: (value) {
-                              setState(() {
-                                if (value == true){
-                                  selectedInterests.add('Technology Gossips');
-                                } else {
-                                  selectedInterests.remove('Technology Gossips');
-                                }
-                              });
-                            },),
                             CheckboxListTile(title: const Text('App Development'), value: selectedInterests.contains('App Development'), onChanged: (value) {
                               setState(() {
                                 if (value == true){
@@ -574,7 +639,16 @@ class _MultiStepFormState extends State<MultiStepForm> {
                                 }
                               });
                             },),
-                            CheckboxListTile(title: const Text('Web Development'), value: selectedInterests.contains('Web Development'), onChanged: (value) {
+                            CheckboxListTile(title: const Text('Desktop Apps Dev'), value: selectedInterests.contains('Desktop Business Apps'), onChanged: (value) {
+                              setState(() {
+                                if (value == true){
+                                  selectedInterests.add('Desktop Business Apps');
+                                } else {
+                                  selectedInterests.remove('Desktop Business Apps');
+                                }
+                              });
+                            },),
+                            CheckboxListTile(title: const Text('Web Laravel Apps'), value: selectedInterests.contains('Web Development'), onChanged: (value) {
                               setState(() {
                                 if (value == true){
                                   selectedInterests.add('Web Development');
@@ -583,12 +657,12 @@ class _MultiStepFormState extends State<MultiStepForm> {
                                 }
                               });
                             },),
-                            CheckboxListTile(title: const Text('Desktop Business Apps'), value: selectedInterests.contains('Desktop Business Apps'), onChanged: (value) {
+                            CheckboxListTile(title: const Text('Technology Gossips'), value: selectedInterests.contains('Technology Gossips'), onChanged: (value) {
                               setState(() {
                                 if (value == true){
-                                  selectedInterests.add('Desktop Business Apps');
+                                  selectedInterests.add('Technology Gossips');
                                 } else {
-                                  selectedInterests.remove('Desktop Business Apps');
+                                  selectedInterests.remove('Technology Gossips');
                                 }
                               });
                             },),

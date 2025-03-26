@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import '../resume/resume_pdf.dart';
 import 'package:pdf/pdf.dart';
 import 'package:open_file/open_file.dart';
 import '../custom_widgets/my_app_button_icon.dart';
+import '../resume/resume_pdf.dart';
 import '../styles/app_constants.dart';
 import '../styles/text_style.dart';
 
@@ -314,12 +314,7 @@ class _ResumeViewState extends State<ResumeView> {
                       MyAppButtonIcon(
                           myOnPressed: () {
 
-                            // // Before navigating back, clear any previous data in the lists
-                            // widget.workExperiences.clear();
-                            // widget.educations.clear();
-                            // widget.skills.clear();
-
-                            Navigator.of(context).pop();},
+                          Navigator.of(context).pop();},
                           buttonText: 'Edit Resume',
                           buttonIcon: const Icon(Icons.note_alt_rounded)),
 

@@ -2,20 +2,23 @@ import 'package:flutter/material.dart';
 import '../styles/app_theme.dart';
 
 class AppTextFormField extends StatelessWidget {
-  const AppTextFormField(
-      {super.key,
-      required this.hintText,
-      this.prefixIcon,
-      this.validator,
-      this.onSaved,
-      this.keyboardType = TextInputType.text,
-      this.obscureText = false,
-      this.maxLines = 1});
+  const AppTextFormField({
+    super.key,
+    required this.hintText,
+    this.prefixIcon,
+    this.validator,
+    this.onSaved,
+    this.controller, // Add this line
+    this.keyboardType = TextInputType.text,
+    this.obscureText = false,
+    this.maxLines = 1,
+  });
 
   final String hintText;
   final IconData? prefixIcon;
   final String? Function(String?)? validator;
   final void Function(String?)? onSaved;
+  final TextEditingController? controller; // Add this line
   final TextInputType keyboardType;
   final bool obscureText;
   final int maxLines;
@@ -25,6 +28,7 @@ class AppTextFormField extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 8.0),
       child: TextFormField(
+        // controller: controller, // Use the controller
         decoration: InputDecoration(
           filled: true,
           fillColor: const Color(0xFF003366).withAlpha(25),
@@ -41,7 +45,7 @@ class AppTextFormField extends StatelessWidget {
               ? Icon(prefixIcon, color: const Color(0xFF003366))
               : null,
           contentPadding:
-              const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+          const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
         ),
         cursorColor: AppTheme.primary,
         style: const TextStyle(

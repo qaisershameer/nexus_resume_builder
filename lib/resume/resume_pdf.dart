@@ -1,14 +1,14 @@
 import 'dart:io';
 import 'dart:math';
-import 'package:path_provider/path_provider.dart';
 import 'package:pdf/pdf.dart';
+import 'package:printing/printing.dart';
 import 'package:pdf/widgets.dart' as pw;
 import 'package:flutter/services.dart' show rootBundle;
-import 'package:printing/printing.dart';
+import 'package:path_provider/path_provider.dart';
 
+const sep = 120.0;
 const PdfColor green = PdfColor.fromInt(0xff9ce5d0);
 const PdfColor lightGreen = PdfColor.fromInt(0xffcdf1e7);
-const sep = 120.0;
 
 Future<File> generateResume(PdfPageFormat format,
     {required String name,
@@ -29,16 +29,19 @@ Future<File> generateResume(PdfPageFormat format,
   final doc = pw.Document(title: 'RESUME', author: name);
 
   // resume profile image
-  final profileImage = pw.MemoryImage((await rootBundle.load(profileImagePath)).buffer.asUint8List(),
-  );
+  final profileImage = pw.MemoryImage((await rootBundle.load(profileImagePath)).buffer.asUint8List(),);
 
   // Page theme
   final pageTheme = await _myPageTheme(format);
 
+  // Multi Page // Theme // Partitions
   doc.addPage(pw.MultiPage(
     theme: pageTheme.theme,
     build: (context) => [
+
+      // Partitions Starts
       pw.Partitions(children: [
+
         // FIRST PARTITION FOR PERSONAL INFO // INTERESTS // WORK-EXP // EDUCATION
         pw.Partition(
           child: pw.Column(
@@ -72,7 +75,7 @@ Future<File> generateResume(PdfPageFormat format,
 
                         // Personal Information // Date of Birth
                         pw.Text(
-                          'Date of Birth: $dateOfBirth',
+                          'D.O.B: $dateOfBirth',
                         ),
 
                         // Personal Information // Gender
@@ -130,7 +133,7 @@ Future<File> generateResume(PdfPageFormat format,
                                 // Work Experiences Block // Job Title // Job Description
                                 _Block(
                                     title: work['jobTitle'] ?? '',
-                                    description: work['jobDescription'] ?? ''),
+                                    description: '${work['jobCompany'] ?? ''} \n${work['jobDescription'] ?? ''}'),
                             ]),
                       ),
                     ]),
@@ -143,7 +146,7 @@ Future<File> generateResume(PdfPageFormat format,
                   _Block(
                       title: edu['eduDegree'] ?? '',
                       description:
-                          '${edu['eduDescription'] ?? ''} \nLevel: ${edu['eduLevel']} \nFrom: ${edu['eduInstitute']}'),
+                          'From: ${edu['eduInstitute']}\n${edu['eduDescription'] ?? ''} \nLevel: ${edu['eduLevel']}'),
               ]),
         ),
 
@@ -214,30 +217,37 @@ Future<File> generateResume(PdfPageFormat format,
 
 // PDF Page Theme
 Future<pw.PageTheme> _myPageTheme(PdfPageFormat format) async {
+
   // PDF Page Theme // Background Border SVG File Path-Name
   final bgShape = await rootBundle.loadString('assets/images/resume.svg');
+
   // PDF Page Theme // Page Margins
   format = format.applyMargin(
       left: PdfPageFormat.cm * 2.0,
       top: 4.0,
       right: PdfPageFormat.cm * 2.0,
       bottom: PdfPageFormat.cm * 2.0);
+
   // PDF Page Theme // Return Theme
   return pw.PageTheme(
     pageFormat: format,
+
     // PDF Page Theme // Fonts Settings
     theme: pw.ThemeData.withFont(
       base: await PdfGoogleFonts.openSansRegular(),
       bold: await PdfGoogleFonts.openSansBold(),
       icons: await PdfGoogleFonts.materialIcons(),
     ),
+
     // PDF Page Theme // Background Border SVG Apply Locations
     buildBackground: (pw.Context context) {
       return pw.FullPage(
         ignoreMargins: true,
         child: pw.Stack(children: [
+
           // top left side border svg
           pw.Positioned(top: 0, left: 0, child: pw.SvgImage(svg: bgShape)),
+
           // bottom right side border svg Transform Rotate
           pw.Positioned(
             bottom: 0,
@@ -247,6 +257,7 @@ Future<pw.PageTheme> _myPageTheme(PdfPageFormat format) async {
               child: pw.SvgImage(svg: bgShape),
             ),
           ),
+
         ]),
       );
     },
