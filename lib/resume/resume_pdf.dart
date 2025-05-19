@@ -3,13 +3,20 @@ import 'dart:math';
 import 'package:pdf/pdf.dart';
 import 'package:printing/printing.dart';
 import 'package:pdf/widgets.dart' as pw;
-import 'package:flutter/services.dart' show rootBundle;
 import 'package:path_provider/path_provider.dart';
+import 'package:flutter/services.dart' show Uint8List, rootBundle;
 
 const sep = 120.0;
 const PdfColor green = PdfColor.fromInt(0xff9ce5d0);
 const PdfColor lightGreen = PdfColor.fromInt(0xffcdf1e7);
 
+Future<File> saveToFileSystem(Uint8List pdfData) async {
+  final directory = await getApplicationDocumentsDirectory();
+  final filePath = "${directory.path}/resume.pdf";
+  final file = File(filePath);
+  await file.writeAsBytes(pdfData);
+  return file;
+}
 Future<File> generateResume(PdfPageFormat format,
     {required String name,
     required String jobTitle,
@@ -25,24 +32,24 @@ Future<File> generateResume(PdfPageFormat format,
     required List<Map<String, dynamic>> skills,
     required List<String> interests}) async {
 
-  // document title author name
-  final doc = pw.Document(title: 'RESUME', author: name);
+  /// document title author name
+  final doc = pw.Document(title: 'MY RESUME', author: name);
 
-  // resume profile image
-  final profileImage = pw.MemoryImage((await rootBundle.load(profileImagePath)).buffer.asUint8List(),);
+  /// resume profile image
+  final profileImage = pw.MemoryImage((await rootBundle.load(profileImagePath)).buffer.asUint8List());
 
-  // Page theme
+  /// Page theme
   final pageTheme = await _myPageTheme(format);
 
-  // Multi Page // Theme // Partitions
+  /// Multi Page // Theme // Partitions
   doc.addPage(pw.MultiPage(
-    theme: pageTheme.theme,
-    build: (context) => [
+    pageTheme: pageTheme,
+    build: (pw.Context context) => [
 
-      // Partitions Starts
+      /// Partitions Starts
       pw.Partitions(children: [
 
-        // FIRST PARTITION FOR PERSONAL INFO // INTERESTS // WORK-EXP // EDUCATION
+        /// FIRST PARTITION FOR PERSONAL INFO // INTERESTS // WORK-EXP // EDUCATION
         pw.Partition(
           child: pw.Column(
               crossAxisAlignment: pw.CrossAxisAlignment.start,
@@ -50,20 +57,20 @@ Future<File> generateResume(PdfPageFormat format,
                 pw.Container(
                   padding: const pw.EdgeInsets.only(left: 50, bottom: 20),
 
-                  // Personal Information
+                  /// Personal Information
                   child: pw.Column(
                       crossAxisAlignment: pw.CrossAxisAlignment.start,
                       children: [
-                        // Personal Information // Name
+                        /// Personal Information // Name
                         pw.Text(name,
                             textScaleFactor: 2,
                             style:
                                 pw.Theme.of(context).defaultTextStyle.copyWith(
                                       fontWeight: pw.FontWeight.bold,
                                     )),
-                        pw.SizedBox(height: 10.0),
+                        pw.SizedBox(height: 4.0),
 
-                        // Personal Information // Job Title
+                        /// Personal Information // Job Title
                         pw.Text(jobTitle,
                             textScaleFactor: 1.2,
                             style:
@@ -71,20 +78,31 @@ Future<File> generateResume(PdfPageFormat format,
                                       fontWeight: pw.FontWeight.bold,
                                       color: green,
                                     )),
-                        pw.SizedBox(height: 10.0),
+                        pw.SizedBox(height: 8.0),
 
-                        // Personal Information // Date of Birth
+                        /// Personal Information // Email
+                        _UrlText(email, "mailto:$email"),
+
+                        /// Personal Information // Website
+                        _UrlText(webSite, "https://$webSite"),
+
+                        /// Personal Information // PhoneNumber
+                        pw.Text(
+                          'Phone: $whatsApp',
+                        ),
+
+                        /// Personal Information // Date of Birth
                         pw.Text(
                           'D.O.B: $dateOfBirth',
                         ),
 
-                        // Personal Information // Gender
+                        /// Personal Information // Gender
                         pw.Text(
                           'Gender: $gender',
                         ),
-                        pw.SizedBox(height: 10.0),
+                        pw.SizedBox(height: 8.0),
 
-                        // Personal Information // -Address -WhatsApp -Email -Website
+                        /// Personal Information // -Address -WhatsApp -Email -Website
                         pw.Row(
                             crossAxisAlignment: pw.CrossAxisAlignment.start,
                             children: [
@@ -95,30 +113,32 @@ Future<File> generateResume(PdfPageFormat format,
                                     // Personal Information // Address
                                     pw.Text(address),
                                   ]),
-                              pw.Column(children: [
-                                // Personal Information // WhatsApp
-                                pw.Text(whatsApp),
 
-                                // Personal Information // Email
-                                _UrlText(email, "mailto:$email"),
+                                // pw.Column(children: [
+                                // // Personal Information // WhatsApp
+                                // pw.Text(whatsApp),
+                                //
+                                // // Personal Information // Email
+                                // _UrlText(email, "mailto:$email"),
+                                //
+                                // // Personal Information // WebSite
+                                // _UrlText(webSite, "https://$webSite"),
+                              // ]),
 
-                                // Personal Information // WebSite
-                                _UrlText(webSite, "https://$webSite"),
-                              ]),
                             ]),
                       ]),
                 ),
 
-                // Interests
+                /// Interests
                 _Category(title: 'Interests'),
 
-                // Interests List Selected Check-Boxes Loop
+                /// Interests List Selected Check-Boxes Loop
                 for (var interest in interests)
 
-                  // Interests Data From Above Loop
+                  /// Interests Data From Above Loop
                   pw.Text('- $interest'),
 
-                // Work Experiences // Educations
+                /// Work Experiences // Educations
                 pw.Row(
                     crossAxisAlignment: pw.CrossAxisAlignment.start,
                     children: [
@@ -126,11 +146,11 @@ Future<File> generateResume(PdfPageFormat format,
                         child: pw.Column(
                             crossAxisAlignment: pw.CrossAxisAlignment.start,
                             children: [
-                              // Work Experiences
+                              /// Work Experiences
                               _Category(title: 'Work Experience'),
                               for (var work in workExperiences)
 
-                                // Work Experiences Block // Job Title // Job Description
+                                /// Work Experiences Block // Job Title // Job Description
                                 _Block(
                                     title: work['jobTitle'] ?? '',
                                     description: '${work['jobCompany'] ?? ''} \n${work['jobDescription'] ?? ''}'),
@@ -138,11 +158,11 @@ Future<File> generateResume(PdfPageFormat format,
                       ),
                     ]),
 
-                // Educations Block Starting
+                /// Educations Block Starting
                 _Category(title: 'Education'),
                 for (var edu in educations)
 
-                  // Educations Block // Degree // Description // Level // Institute
+                  /// Educations Block // Degree // Description // Level // Institute
                   _Block(
                       title: edu['eduDegree'] ?? '',
                       description:
@@ -150,7 +170,7 @@ Future<File> generateResume(PdfPageFormat format,
               ]),
         ),
 
-        // SECOND PARTITION FOR IMAGE // SKILLS // BARCODE
+        /// SECOND PARTITION FOR IMAGE // SKILLS // BARCODE
         pw.Partition(
           width: sep,
           child: pw.Column(children: [
@@ -160,7 +180,7 @@ Future<File> generateResume(PdfPageFormat format,
                   crossAxisAlignment: pw.CrossAxisAlignment.center,
                   mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
                   children: [
-                    // Profile Memory Image
+                    /// Profile Memory Image
                     pw.ClipOval(
                       child: pw.Container(
                         width: 100,
@@ -170,14 +190,14 @@ Future<File> generateResume(PdfPageFormat format,
                       ),
                     ),
 
-                    // Skills
+                    /// Skills
                     pw.Column(
                         crossAxisAlignment: pw.CrossAxisAlignment.center,
                         children: [
                           _Category(title: 'Skills'),
                           for (var skill in skills)
 
-                            // Round Circle Widget with Value
+                            /// Round Circle Widget with Value
                             _Percent(
                               size: 60,
                               value: skill['skillProficiency'],
@@ -186,7 +206,7 @@ Future<File> generateResume(PdfPageFormat format,
                             ),
                         ]),
 
-                    // Barcode
+                    /// Barcode
                     pw.BarcodeWidget(
                       data: webSite,
                       height: 60,
@@ -202,56 +222,56 @@ Future<File> generateResume(PdfPageFormat format,
     ],
   ));
 
-  // App Directory // File Path -1st Step
+  /// App Directory // File Path -1st Step
   final outPutDirectory = await getApplicationCacheDirectory();
 
-  // App Directory // File Name - File Object -2nd Step
+  /// App Directory // File Name - File Object -2nd Step
   final file = File('${outPutDirectory.path}/resume.pdf');
 
-  // App Directory // File Write-Save -3rd Step
+  /// App Directory // File Write-Save -3rd Step
   await file.writeAsBytes(await doc.save());
 
-  // App Directory // File Open-Load-Return -4th Step
+  /// App Directory // File Open-Load-Return -4th Step
   return file;
 }
 
-// PDF Page Theme
+/// PDF Page Theme
 Future<pw.PageTheme> _myPageTheme(PdfPageFormat format) async {
 
-  // PDF Page Theme // Background Border SVG File Path-Name
+  /// PDF Page Theme // Background Border SVG File Path-Name
   final bgShape = await rootBundle.loadString('assets/images/resume.svg');
 
-  // PDF Page Theme // Page Margins
+  /// PDF Page Theme // Page Margins
   format = format.applyMargin(
       left: PdfPageFormat.cm * 2.0,
       top: 4.0,
       right: PdfPageFormat.cm * 2.0,
       bottom: PdfPageFormat.cm * 2.0);
 
-  // PDF Page Theme // Return Theme
+  /// PDF Page Theme // Return Theme
   return pw.PageTheme(
     pageFormat: format,
 
-    // PDF Page Theme // Fonts Settings
+    /// PDF Page Theme // Fonts Settings
     theme: pw.ThemeData.withFont(
       base: await PdfGoogleFonts.openSansRegular(),
       bold: await PdfGoogleFonts.openSansBold(),
       icons: await PdfGoogleFonts.materialIcons(),
     ),
 
-    // PDF Page Theme // Background Border SVG Apply Locations
+    /// PDF Page Theme // Background Border SVG Apply Locations
     buildBackground: (pw.Context context) {
       return pw.FullPage(
         ignoreMargins: true,
         child: pw.Stack(children: [
 
-          // top left side border svg
-          pw.Positioned(top: 0, left: 0, child: pw.SvgImage(svg: bgShape)),
+          /// top left side border svg
+          pw.Positioned(left: 0, top: 0, child: pw.SvgImage(svg: bgShape)),
 
-          // bottom right side border svg Transform Rotate
+          /// bottom right side border svg Transform Rotate
           pw.Positioned(
-            bottom: 0,
             right: 0,
+            bottom: 0,
             child: pw.Transform.rotate(
               angle: pi,
               child: pw.SvgImage(svg: bgShape),

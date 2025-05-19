@@ -217,16 +217,14 @@ class _MultiStepFormState extends State<MultiStepForm> {
                   backgroundColor: Colors.white,
                   child: CircleAvatar(
                     radius: 45,
-                    backgroundImage: AssetImage(AppStrings.image24),
+                    backgroundImage: AssetImage(AppStrings.image20),
                   ),
                 ),
               ),
             ],
           ),
 
-          const SizedBox(
-            height: 16,
-          ),
+          const SizedBox(height: 16),
 
           // Stepper Section
           Expanded(
@@ -271,7 +269,7 @@ class _MultiStepFormState extends State<MultiStepForm> {
                         // WhatsApp
                         AppTextFormField(
                           keyboardType: TextInputType.phone,
-                          hintText: 'WhatsApp Number',
+                          hintText: 'Phone Number',
                           prefixIcon: Icons.phone_in_talk,
                           validator: (value) => value == null || value.isEmpty
                               ? 'Required'

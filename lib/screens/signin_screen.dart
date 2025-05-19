@@ -1,9 +1,9 @@
-import 'package:flutter/material.dart';
 import '../models/user_model.dart';
+import '../styles/text_style.dart';
+import '../styles/app_constants.dart';
+import 'package:flutter/material.dart';
 import '../screens/second_screen.dart';
 import '../screens/signup_screen.dart';
-import '../styles/app_constants.dart';
-import '../styles/text_style.dart';
 
 class SigninScreen extends StatefulWidget {
   const SigninScreen({super.key});
@@ -12,7 +12,10 @@ class SigninScreen extends StatefulWidget {
   State<SigninScreen> createState() => _SigninScreenState();
 }
 
+
 class _SigninScreenState extends State<SigninScreen> {
+
+
   TextEditingController emailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
   bool obscureStatus = true;
@@ -20,6 +23,7 @@ class _SigninScreenState extends State<SigninScreen> {
 
   // // Users list
   List<UserModel> users = [];
+
 
   // Method to validate user credentials
   bool validateUser(String email, String password) {
@@ -30,6 +34,13 @@ class _SigninScreenState extends State<SigninScreen> {
       }
     }
     return false; // Invalid credentials
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    emailController.text = AppStrings.signInEmail;
+    passwordController.text = AppStrings.signInPass;
   }
 
   @override
@@ -68,7 +79,6 @@ class _SigninScreenState extends State<SigninScreen> {
                 TextFormField(
                   controller: emailController,
                   keyboardType: TextInputType.emailAddress,
-                  // initialValue: AppStrings.signInEmail??'',
                   validator: (value) {
                     if (value!.isEmpty) {
                       return 'This Field is required.';
@@ -103,7 +113,6 @@ class _SigninScreenState extends State<SigninScreen> {
                 TextFormField(
                   controller: passwordController,
                   keyboardType: TextInputType.text,
-                  // initialValue: AppStrings.signInPass??'',
                   validator: (value) {
                     if (value!.isEmpty) {
                       return 'This Field is required.';

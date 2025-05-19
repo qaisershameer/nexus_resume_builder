@@ -149,15 +149,13 @@ class _SignupScreenState extends State<SignupScreen> {
                     hintText: 'Enter your Name',
                     hintStyle: hintTextStyles,
                     border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(16),
-                      borderSide:
-                          const BorderSide(color: Colors.deepOrange, width: 3),
-                    ),
+                        borderRadius: BorderRadius.circular(16),
+                        borderSide: const BorderSide(
+                            color: Colors.deepOrange, width: 3)),
                     focusedBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(16),
-                      borderSide:
-                          const BorderSide(color: Colors.deepOrange, width: 3),
-                    ),
+                        borderRadius: BorderRadius.circular(16),
+                        borderSide: const BorderSide(
+                            color: Colors.deepOrange, width: 3)),
                   ),
                 ),
                 const SizedBox(
@@ -194,9 +192,7 @@ class _SignupScreenState extends State<SignupScreen> {
                     ),
                   ),
                 ),
-                const SizedBox(
-                  height: 12,
-                ),
+                const SizedBox(height: 12),
                 TextFormField(
                   controller: passwordController,
                   keyboardType: TextInputType.text,
@@ -208,43 +204,31 @@ class _SignupScreenState extends State<SignupScreen> {
                   style: hintTextStyles,
                   obscureText: obscureStatus,
                   decoration: InputDecoration(
-                    prefixIcon: Icon(
-                      Icons.lock,
-                      color: Colors.grey.shade500,
-                    ),
+                    prefixIcon: Icon(Icons.lock, color: Colors.grey.shade500),
                     suffixIcon: IconButton(
                       onPressed: () => setState(() {
                         obscureStatus = !obscureStatus;
                       }),
                       icon: obscureStatus
-                          ? Icon(
-                              Icons.visibility_off,
-                              color: Colors.grey.shade500,
-                            )
-                          : Icon(
-                              Icons.visibility,
-                              color: Colors.grey.shade500,
-                            ),
+                          ? Icon(Icons.visibility_off,
+                              color: Colors.grey.shade500)
+                          : Icon(Icons.visibility, color: Colors.grey.shade500),
                     ),
                     labelText: 'Password',
                     labelStyle: labelTextStyles,
                     hintText: 'Enter your Password',
                     hintStyle: hintTextStyles,
                     border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(16),
-                      borderSide:
-                          const BorderSide(color: Colors.deepOrange, width: 3),
-                    ),
+                        borderRadius: BorderRadius.circular(16),
+                        borderSide: const BorderSide(
+                            color: Colors.deepOrange, width: 3)),
                     focusedBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(16),
-                      borderSide:
-                          const BorderSide(color: Colors.deepOrange, width: 3),
-                    ),
+                        borderRadius: BorderRadius.circular(16),
+                        borderSide: const BorderSide(
+                            color: Colors.deepOrange, width: 3)),
                   ),
                 ),
-                const SizedBox(
-                  height: 12,
-                ),
+                const SizedBox(height: 12),
                 TextFormField(
                   controller: phoneController,
                   keyboardType: TextInputType.phone,
@@ -277,43 +261,24 @@ class _SignupScreenState extends State<SignupScreen> {
                   ),
                 ),
                 const SizedBox(
-                  height: 12,
+                  height: 12
                 ),
+                CheckingTile(isCheck: hasOneDigit, title: ' Contain One Digit'),
+                const SizedBox(height: 10),
                 CheckingTile(
-                  isCheck: hasOneDigit,
-                  title: ' Contain One Digit',
-                ),
-                const SizedBox(
-                  height: 10,
-                ),
+                    isCheck: hasLowerCase, title: ' Contain Lower Case'),
+                const SizedBox(height: 10),
                 CheckingTile(
-                  isCheck: hasLowerCase,
-                  title: ' Contain Lower Case',
-                ),
-                const SizedBox(
-                  height: 10,
-                ),
+                    isCheck: hasUpperCase, title: ' Contain Upper Case'),
+                const SizedBox(height: 10),
                 CheckingTile(
-                  isCheck: hasUpperCase,
-                  title: ' Contain Upper Case',
-                ),
-                const SizedBox(
-                  height: 10,
-                ),
+                    isCheck: isEightCharacter,
+                    title: ' Contain Eight Characters'),
+                const SizedBox(height: 10),
                 CheckingTile(
-                  isCheck: isEightCharacter,
-                  title: ' Contain Eight Characters',
-                ),
-                const SizedBox(
-                  height: 10,
-                ),
-                CheckingTile(
-                  isCheck: hasSymbol,
-                  title: ' Contain Symbol (~`!@#\$%^&*()_+=/)',
-                ),
-                const SizedBox(
-                  height: 10,
-                ),
+                    isCheck: hasSymbol,
+                    title: ' Contain Symbol (~`!@#\$%^&*()_+=/)'),
+                const SizedBox(height: 10),
                 FilledButton(
                   onPressed: () {
                     if (formKey.currentState!.validate()) {
@@ -333,13 +298,9 @@ class _SignupScreenState extends State<SignupScreen> {
                       backgroundColor: Colors.deepOrange,
                       minimumSize:
                           Size(MediaQuery.sizeOf(context).width / 2, 55)),
-                  child: const Text(
-                    'REGISTER',
-                  ),
+                  child: const Text('REGISTER'),
                 ),
-                const SizedBox(
-                  height: 12,
-                ),
+                const SizedBox(height: 12),
                 GestureDetector(
                   onTap: () {
                     Navigator.of(context).push(MaterialPageRoute(
@@ -347,10 +308,8 @@ class _SignupScreenState extends State<SignupScreen> {
                   },
                   child: Text(
                     'already have an Account? Click here to LOGIN',
-                    style: TextStyle(
-                      color: Colors.green.shade500,
-                      fontSize: 14,
-                    ),
+                    style:
+                        TextStyle(color: Colors.green.shade500, fontSize: 14),
                   ),
                 ),
               ],

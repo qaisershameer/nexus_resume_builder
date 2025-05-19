@@ -73,6 +73,7 @@ class _ResumeViewState extends State<ResumeView> {
           interests: widget.interests);
 
       // Success Message Show in Status Bar
+      // ignore: use_build_context_synchronously
       ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
           duration: Duration(seconds: 2),
           behavior: SnackBarBehavior.floating,
@@ -84,6 +85,7 @@ class _ResumeViewState extends State<ResumeView> {
     } catch (e) {
       debugPrint('Error $e');
       // Error Message Show in Status Bar
+      // ignore: use_build_context_synchronously
       ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
           duration: Duration(seconds: 2),
           behavior: SnackBarBehavior.floating,
